@@ -1,10 +1,16 @@
+```javascript
+// ======================================================
+// THREATPULSE SECURITY DASHBOARD
+// ======================================================
+
+
 // ================= DATE =================
 
 const dateElement = document.getElementById("currentDate");
 
-const today = new Date();
-
 if (dateElement) {
+    const today = new Date();
+
     dateElement.textContent = today.toLocaleDateString("en-IN", {
         day: "2-digit",
         month: "short",
@@ -16,7 +22,6 @@ if (dateElement) {
 // ================= SEARCH =================
 
 const searchInput = document.getElementById("searchInput");
-
 const incidents = document.querySelectorAll(".incident");
 
 if (searchInput) {
@@ -25,19 +30,16 @@ if (searchInput) {
 
         const query = this.value.toLowerCase().trim();
 
-        incidents.forEach(incident => {
+        incidents.forEach(function (incident) {
 
-            const name =
-                incident.dataset.name.toLowerCase();
+            const name = incident.dataset.name
+                ? incident.dataset.name.toLowerCase()
+                : "";
 
             if (name.includes(query)) {
-
                 incident.style.display = "flex";
-
             } else {
-
                 incident.style.display = "none";
-
             }
 
         });
@@ -49,8 +51,7 @@ if (searchInput) {
 
 // ================= FILTER =================
 
-const filterButton =
-    document.getElementById("filterButton");
+const filterButton = document.getElementById("filterButton");
 
 let showingCritical = false;
 
@@ -60,20 +61,14 @@ if (filterButton) {
 
         showingCritical = !showingCritical;
 
-        incidents.forEach(incident => {
+        incidents.forEach(function (incident) {
 
             if (showingCritical) {
 
-                if (
-                    !incident.classList.contains("critical")
-                ) {
-
-                    incident.style.display = "none";
-
-                } else {
-
+                if (incident.classList.contains("critical")) {
                     incident.style.display = "flex";
-
+                } else {
+                    incident.style.display = "none";
                 }
 
             } else {
@@ -84,42 +79,102 @@ if (filterButton) {
 
         });
 
-        filterButton.innerHTML = showingCritical
-            ? '<i class="fa-solid fa-filter"></i> Critical'
-            : '<i class="fa-solid fa-filter"></i> Filter';
+        if (showingCritical) {
+
+            filterButton.innerHTML =
+                '<i class="fa-solid fa-filter"></i> Critical';
+
+        } else {
+
+            filterButton.innerHTML =
+                '<i class="fa-solid fa-filter"></i> Filter';
+
+        }
 
     });
 
 }
 
 
-// ================= VIEW BUTTON =================
+```javascript
+// ================= VIEW INCIDENT =================
 
-const viewButtons =
-    document.querySelectorAll(".view-button");
+// Person 2's React application
+const PERSON_2_URL = "http://localhost:5173";
 
-const toast =
-    document.getElementById("toast");
+// Dashboard incident ID → Person 2 incident ID
+const incidentRoutes = {
+    "credential-phishing": "INC-002",
+    "malware-attachment": "INC-003",
+    "suspicious-domain": "INC-004",
+    "brute-force": "INC-005"
+};
 
 
-viewButtons.forEach(button => {
+// Find all View buttons
+const viewButtons = document.querySelectorAll(".view-button");
+
+console.log("View buttons found:", viewButtons.length);
+
+
+// Add click event to each View button
+viewButtons.forEach(function (button) {
 
     button.addEventListener("click", function () {
 
-        const incident =
-            this.closest(".incident");
+        // Get data-incident-id from the HTML button
+        const dashboardIncidentId =
+            this.getAttribute("data-incident-id");
 
-        const title =
-            incident.querySelector("h3").textContent;
-
-        showToast(
-            "Incident selected",
-            `${title} opened for investigation.`
+        console.log(
+            "Dashboard Incident:",
+            dashboardIncidentId
         );
+
+
+        // Find the corresponding Person 2 incident ID
+        const person2IncidentId =
+            incidentRoutes[dashboardIncidentId];
+
+
+        // Check whether the incident exists
+        if (!person2IncidentId) {
+
+            console.error(
+                "Incident route not found for:",
+                dashboardIncidentId
+            );
+
+            alert(
+                "Incident route not found: " +
+                dashboardIncidentId
+            );
+
+            return;
+        }
+
+
+        // Create Person 2's incident URL
+        const targetUrl =
+            PERSON_2_URL +
+            "/incident/" +
+            person2IncidentId;
+
+
+        console.log(
+            "Redirecting to:",
+            targetUrl
+        );
+
+
+        // Redirect to Person 2's incident details page
+        window.location.assign(targetUrl);
 
     });
 
 });
+```
+
 
 
 // ================= QUICK ACTIONS =================
@@ -127,8 +182,11 @@ viewButtons.forEach(button => {
 const actionButtons =
     document.querySelectorAll(".quick-actions button");
 
+const toast =
+    document.getElementById("toast");
 
-actionButtons.forEach(button => {
+
+actionButtons.forEach(function (button) {
 
     button.addEventListener("click", function () {
 
@@ -149,17 +207,38 @@ actionButtons.forEach(button => {
 
 function showToast(title, message) {
 
-    if (!toast) return;
+    if (!toast) {
+        return;
+    }
 
-    toast.querySelector("strong").textContent =
-        title;
 
-    toast.querySelector("span").textContent =
-        message;
+    const titleElement =
+        toast.querySelector("strong");
+
+    const messageElement =
+        toast.querySelector("span");
+
+
+    if (titleElement) {
+
+        titleElement.textContent =
+            title;
+
+    }
+
+
+    if (messageElement) {
+
+        messageElement.textContent =
+            message;
+
+    }
+
 
     toast.classList.add("show");
 
-    setTimeout(() => {
+
+    setTimeout(function () {
 
         toast.classList.remove("show");
 
@@ -168,19 +247,25 @@ function showToast(title, message) {
 }
 
 
-// ================= LIVE SIMULATION =================
+// ================= LIVE MONITORING =================
 
-setInterval(() => {
+setInterval(function () {
 
     const liveDot =
         document.querySelector(".live-label span");
 
+
     if (liveDot) {
 
-        liveDot.style.opacity =
-            liveDot.style.opacity === "0.4"
-                ? "1"
-                : "0.4";
+        if (liveDot.style.opacity === "0.4") {
+
+            liveDot.style.opacity = "1";
+
+        } else {
+
+            liveDot.style.opacity = "0.4";
+
+        }
 
     }
 
@@ -189,7 +274,7 @@ setInterval(() => {
 
 // ================= KEYBOARD SEARCH =================
 
-document.addEventListener("keydown", function(event) {
+document.addEventListener("keydown", function (event) {
 
     if (
         (event.ctrlKey || event.metaKey) &&
@@ -198,8 +283,11 @@ document.addEventListener("keydown", function(event) {
 
         event.preventDefault();
 
+
         if (searchInput) {
+
             searchInput.focus();
+
         }
 
     }
@@ -207,12 +295,20 @@ document.addEventListener("keydown", function(event) {
 });
 
 
-// ================= REFRESH =================
+// ================= PAGE LOAD =================
 
-window.addEventListener("load", () => {
+window.addEventListener("load", function () {
 
     console.log(
         "ThreatPulse Security Dashboard initialized."
     );
 
+    console.log(
+        "View buttons found:",
+        viewButtons.length
+    );
+
 });
+```
+
+```
