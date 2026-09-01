@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import Incidents from './pages/Incidents';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
+import PriorityQueuePage from './pages/PriorityQueuePage';
 import NewIncidentModal from './components/NewIncidentModal';
 
 function App() {
@@ -26,7 +27,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/incidents" element={<Incidents />} />
-            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/analytics" element={<Analytics />} />`n            <Route path="/queue" element={<PriorityQueuePage />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<div className="text-center mt-20 text-gray-500">Page Not Found</div>} />
           </Routes>
