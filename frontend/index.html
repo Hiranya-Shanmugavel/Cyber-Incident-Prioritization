@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ThreatPulse | Security Operations Center</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+   <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">
+            <i class="fa-solid fa-shield-halved"></i>
+        </div>
+
+        <div>
+            <h2>Threat<span>Pulse</span></h2>
+            <small>SECURITY OPERATIONS</small>
+        </div>
+    </div>
+
+    <div class="nav-section">
+        <p class="nav-title">MONITORING</p>
+
+        <a href="#" class="nav-link active">
+            <i class="fa-solid fa-grid-2"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="#" class="nav-link">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Incidents</span>
+            <b class="nav-badge">12</b>
+        </a>
+
+        <a href="#" class="nav-link">
+            <i class="fa-solid fa-ranking-star"></i>
+            <span>Priority Queue</span>
+        </a>
+
+        <a href="#" class="nav-link">
+            <i class="fa-solid fa-chart-line"></i>
+            <span>Analytics</span>
+        </a>
+    </div>
+
+    <div class="nav-section">
+        <p class="nav-title">MANAGEMENT</p>
+
+        <a href="#" class="nav-link">
+            <i class="fa-solid fa-users"></i>
+            <span>Analysts</span>
+        </a>
+
+        <a href="#" class="nav-link">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Activity Logs</span>
+        </a>
+
+        <a href="#" class="nav-link">
+            <i class="fa-solid fa-gear"></i>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <div class="sidebar-bottom">
+
+        <div class="system-status">
+            <span class="status-dot"></span>
+
+            <div>
+                <strong>System Operational</strong>
+                <small>All services running</small>
+            </div>
+        </div>
+
+        <div class="user-card">
+
+            <div class="avatar">HS</div>
+
+            <div class="user-info">
+                <strong>Security Analyst</strong>
+                <small>Level 2 Analyst</small>
+            </div>
+
+            <i class="fa-solid fa-ellipsis"></i>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- ================= MAIN ================= -->
+
+<main class="main">
+
+    <!-- HEADER -->
+
+    <header class="topbar">
+
+        <div class="page-title">
+
+            <div class="mobile-menu">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+
+            <div>
+                <h1>Security Command Center</h1>
+                <p>Real-time threat monitoring & incident prioritization</p>
+            </div>
+
+        </div>
+
+        <div class="top-actions">
+
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search incidents...">
+                <kbd>⌘ K</kbd>
+            </div>
+
+            <button class="icon-button">
+                <i class="fa-regular fa-bell"></i>
+                <span class="notification-dot"></span>
+            </button>
+
+            <button class="profile-button">
+                HS
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- ================= CONTENT ================= -->
+
+    <section class="content">
+
+
+        <!-- WELCOME -->
+
+        <div class="welcome-row">
+
+            <div>
+                <span class="live-label">
+                    <span></span> LIVE MONITORING
+                </span>
+
+                <h2>Good morning, Analyst 👋</h2>
+
+                <p>
+                    Here's what's happening across your security environment.
+                </p>
+            </div>
+
+            <div class="date-box">
+                <i class="fa-regular fa-calendar"></i>
+                <span id="currentDate"></span>
+            </div>
+
+        </div>
+
+
+        <!-- ================= STAT CARDS ================= -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card danger">
+
+                <div class="stat-top">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+
+                    <span class="trend negative">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        18%
+                    </span>
+                </div>
+
+                <div class="stat-value">24</div>
+
+                <div class="stat-label">
+                    Critical Threats
+                </div>
+
+                <div class="stat-footer">
+                    <span>vs last 24 hours</span>
+                    <strong>+4</strong>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card warning">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+
+                    <span class="trend negative">
+                        <i class="fa-solid fa-arrow-up"></i>
+                        7%
+                    </span>
+
+                </div>
+
+                <div class="stat-value">67</div>
+
+                <div class="stat-label">
+                    Active Incidents
+                </div>
+
+                <div class="stat-footer">
+                    <span>requiring attention</span>
+                    <strong>12 urgent</strong>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card safe">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-shield-check"></i>
+                    </div>
+
+                    <span class="trend positive">
+                        <i class="fa-solid fa-arrow-down"></i>
+                        23%
+                    </span>
+
+                </div>
+
+                <div class="stat-value">93.7%</div>
+
+                <div class="stat-label">
+                    Threat Detection Rate
+                </div>
+
+                <div class="stat-footer">
+                    <span>AI model accuracy</span>
+                    <strong>Excellent</strong>
+                </div>
+
+            </div>
+
+
+            <div class="stat-card purple">
+
+                <div class="stat-top">
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-stopwatch"></i>
+                    </div>
+
+                    <span class="trend positive">
+                        <i class="fa-solid fa-arrow-down"></i>
+                        12%
+                    </span>
+
+                </div>
+
+                <div class="stat-value">4.2m</div>
+
+                <div class="stat-label">
+                    Avg. Response Time
+                </div>
+
+                <div class="stat-footer">
+                    <span>target &lt; 5 minutes</span>
+                    <strong>On target</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= MAIN GRID ================= -->
+
+        <div class="dashboard-grid">
+
+
+            <!-- PRIORITY QUEUE -->
+
+            <section class="panel priority-panel">
+
+                <div class="panel-header">
+
+                    <div>
+                        <div class="panel-title">
+                            <span class="red-pulse"></span>
+                            Priority Queue
+                        </div>
+
+                        <p>Incidents ranked by AI risk score</p>
+                    </div>
+
+                    <div class="panel-actions">
+
+                        <button class="filter-button" id="filterButton">
+                            <i class="fa-solid fa-filter"></i>
+                            Filter
+                        </button>
+
+                        <button class="more-button">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- QUEUE -->
+
+                <div class="queue" id="incidentList">
+
+
+                    <!-- INCIDENT 1 -->
+
+                    <div class="incident critical"
+                         data-name="credential phishing"
+                         data-score="98">
+
+                        <div class="rank">
+                            01
+                        </div>
+
+                        <div class="incident-main">
+
+                            <div class="incident-heading">
+
+                                <h3>Credential Phishing Campaign</h3>
+
+                                <span class="severity critical-badge">
+                                    CRITICAL
+                                </span>
+
+                            </div>
+
+                            <p>
+                                Suspicious login page targeting enterprise
+                                credentials
+                            </p>
+
+                            <div class="incident-meta">
+
+                                <span>
+                                    <i class="fa-solid fa-globe"></i>
+                                    login-secure-auth.com
+                                </span>
+
+                                <span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    2 min ago
+                                </span>
+
+                                <span>
+                                    <i class="fa-solid fa-user"></i>
+                                    14 targets
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="risk-score">
+
+                            <div class="score-ring">
+                                <span>98</span>
+                            </div>
+
+                            <small>RISK</small>
+
+                        </div>
+
+                        <button class="view-button">
+                            View
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+
+                    </div>
+
+
+                    <!-- INCIDENT 2 -->
+
+                    <div class="incident high"
+                         data-name="malware attachment"
+                         data-score="91">
+
+                        <div class="rank">
+                            02
+                        </div>
+
+                        <div class="incident-main">
+
+                            <div class="incident-heading">
+
+                                <h3>Malware Attachment Detected</h3>
+
+                                <span class="severity high-badge">
+                                    HIGH
+                                </span>
+
+                            </div>
+
+                            <p>
+                                Malicious executable detected in incoming email
+                            </p>
+
+                            <div class="incident-meta">
+
+                                <span>
+                                    <i class="fa-solid fa-envelope"></i>
+                                    email gateway
+                                </span>
+
+                                <span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    7 min ago
+                                </span>
+
+                                <span>
+                                    <i class="fa-solid fa-user"></i>
+                                    8 targets
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="risk-score">
+
+                            <div class="score-ring">
+                                <span>91</span>
+                            </div>
+
+                            <small>RISK</small>
+
+                        </div>
+
+                        <button class="view-button">
+                            View
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+
+                    </div>
+
+
+                    <!-- INCIDENT 3 -->
+
+                    <div class="incident high"
+                         data-name="suspicious domain"
+                         data-score="87">
+
+                        <div class="rank">
+                            03
+                        </div>
+
+                        <div class="incident-main">
+
+                            <div class="incident-heading">
+
+                                <h3>Suspicious Domain Activity</h3>
+
+                                <span class="severity high-badge">
+                                    HIGH
+                                </span>
+
+                            </div>
+
+                            <p>
+                                Newly registered domain mimicking a trusted brand
+                            </p>
+
+                            <div class="incident-meta">
+
+                                <span>
+                                    <i class="fa-solid fa-globe"></i>
+                                    secure-payments.net
+                                </span>
+
+                                <span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    11 min ago
+                                </span>
+
+                                <span>
+                                    <i class="fa-solid fa-user"></i>
+                                    5 targets
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="risk-score">
+
+                            <div class="score-ring">
+                                <span>87</span>
+                            </div>
+
+                            <small>RISK</small>
+
+                        </div>
+
+                        <button class="view-button">
+                            View
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+
+                    </div>
+
+
+                    <!-- INCIDENT 4 -->
+
+                    <div class="incident medium"
+                         data-name="brute force attack"
+                         data-score="72">
+
+                        <div class="rank">
+                            04
+                        </div>
+
+                        <div class="incident-main">
+
+                            <div class="incident-heading">
+
+                                <h3>Brute Force Attempt</h3>
+
+                                <span class="severity medium-badge">
+                                    MEDIUM
+                                </span>
+
+                            </div>
+
+                            <p>
+                                Multiple failed authentication attempts detected
+                            </p>
+
+                            <div class="incident-meta">
+
+                                <span>
+                                    <i class="fa-solid fa-server"></i>
+                                    auth server
+                                </span>
+
+                                <span>
+                                    <i class="fa-regular fa-clock"></i>
+                                    18 min ago
+                                </span>
+
+                                <span>
+                                    <i class="fa-solid fa-user"></i>
+                                    2 targets
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="risk-score">
+
+                            <div class="score-ring">
+                                <span>72</span>
+                            </div>
+
+                            <small>RISK</small>
+
+                        </div>
+
+                        <button class="view-button">
+                            View
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="queue-footer">
+
+                    <span>
+                        Showing <strong>4</strong> of
+                        <strong>67</strong> active incidents
+                    </span>
+
+                    <button>
+                        View Full Queue
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- ================= RIGHT PANEL ================= -->
+
+            <aside class="right-column">
+
+
+                <!-- THREAT DISTRIBUTION -->
+
+                <section class="panel threat-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+                            <div class="panel-title">
+                                Threat Distribution
+                            </div>
+
+                            <p>Current incident severity</p>
+                        </div>
+
+                        <button class="more-button">
+                            <i class="fa-solid fa-ellipsis"></i>
+                        </button>
+
+                    </div>
+
+
+                    <div class="donut-container">
+
+                        <div class="donut">
+
+                            <div class="donut-center">
+
+                                <strong>67</strong>
+                                <span>Incidents</span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="legend">
+
+                        <div>
+                            <span class="legend-dot critical-dot"></span>
+                            <span>Critical</span>
+                            <strong>24</strong>
+                        </div>
+
+                        <div>
+                            <span class="legend-dot high-dot"></span>
+                            <span>High</span>
+                            <strong>28</strong>
+                        </div>
+
+                        <div>
+                            <span class="legend-dot medium-dot"></span>
+                            <span>Medium</span>
+                            <strong>15</strong>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- AI STATUS -->
+
+                <section class="panel ai-panel">
+
+                    <div class="ai-header">
+
+                        <div class="ai-icon">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+
+                        <div>
+                            <strong>AI Risk Engine</strong>
+                            <span>
+                                <i class="fa-solid fa-circle"></i>
+                                Online
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="ai-score">
+
+                        <div>
+                            <small>ANALYSIS CONFIDENCE</small>
+                            <strong>96.4%</strong>
+                        </div>
+
+                        <div class="confidence-bar">
+                            <span></span>
+                        </div>
+
+                    </div>
+
+
+                    <p>
+                        AI engine has analyzed
+                        <strong>1,284</strong>
+                        security events today.
+                    </p>
+
+                </section>
+
+
+                <!-- QUICK ACTIONS -->
+
+                <section class="panel actions-panel">
+
+                    <div class="panel-title">
+                        Quick Actions
+                    </div>
+
+                    <div class="quick-actions">
+
+                        <button>
+                            <i class="fa-solid fa-plus"></i>
+                            New Incident
+                        </button>
+
+                        <button>
+                            <i class="fa-solid fa-file-export"></i>
+                            Export Report
+                        </button>
+
+                        <button>
+                            <i class="fa-solid fa-user-shield"></i>
+                            Assign Analyst
+                        </button>
+
+                        <button>
+                            <i class="fa-solid fa-rotate"></i>
+                            Refresh Data
+                        </button>
+
+                    </div>
+
+                </section>
+
+            </aside>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- ================= TOAST ================= -->
+
+<div class="toast" id="toast">
+
+    <i class="fa-solid fa-circle-check"></i>
+
+    <div>
+        <strong>Action completed</strong>
+        <span>Dashboard updated successfully.</span>
+    </div>
+
+</div>
+
+
+<script src="./script.js"></script>
+
+</body>
+</html>
