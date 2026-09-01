@@ -71,8 +71,8 @@ def prioritize_alerts(alerts):
         # Step 2: Calculate priority score
         priority_score = calculate_priority_score(normalized_alert)
 
-        # Create a new alert result
-        result = alert.copy()
+        # Create result using NORMALIZED values
+        result = normalized_alert.copy()
 
         result["priority_score"] = priority_score
         result["priority_level"] = get_priority_level(priority_score)

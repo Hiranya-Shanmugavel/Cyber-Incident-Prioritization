@@ -5,6 +5,11 @@
         "source": "Email",
         "description": "Suspicious phishing email detected",
         "severity": "HIGH",
+        "asset_importance": 8,
+        "affected_users": 7,
+        "data_sensitivity": 8,
+        "confidence": 9,
+        "business_impact": 8,
         "status": "OPEN"
     },
     {
@@ -13,6 +18,11 @@
         "source": "Endpoint",
         "description": "Malware detected on employee workstation",
         "severity": "CRITICAL",
+        "asset_importance": 9,
+        "affected_users": 6,
+        "data_sensitivity": 7,
+        "confidence": 9,
+        "business_impact": 9,
         "status": "OPEN"
     },
     {
@@ -21,6 +31,11 @@
         "source": "Login System",
         "description": "Multiple failed login attempts detected",
         "severity": "MEDIUM",
+        "asset_importance": 6,
+        "affected_users": 3,
+        "data_sensitivity": 5,
+        "confidence": 8,
+        "business_impact": 5,
         "status": "OPEN"
     },
     {
@@ -29,6 +44,11 @@
         "source": "Database",
         "description": "Unusual database access detected",
         "severity": "CRITICAL",
+        "asset_importance": 10,
+        "affected_users": 9,
+        "data_sensitivity": 10,
+        "confidence": 9,
+        "business_impact": 10,
         "status": "OPEN"
     },
     {
@@ -37,6 +57,11 @@
         "source": "Server",
         "description": "Ransomware activity detected",
         "severity": "CRITICAL",
+        "asset_importance": 10,
+        "affected_users": 8,
+        "data_sensitivity": 9,
+        "confidence": 9,
+        "business_impact": 10,
         "status": "OPEN"
     }
 ]

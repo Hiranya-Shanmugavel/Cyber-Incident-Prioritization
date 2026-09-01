@@ -24,9 +24,10 @@ def get_incidents():
     with open(file_path, "r") as file:
         incidents = json.load(file)
 
-    # If old/sample incidents don't have scoring fields,
-    # return them as they are.
-    return jsonify(incidents)
+    # Send incidents through Person 3's scoring engine
+    scored_incidents = prioritize_alerts(incidents)
+
+    return jsonify(scored_incidents)
 
 
 @incident_bp.route("/api/incidents/<int:incident_id>", methods=["GET"])
@@ -37,12 +38,34 @@ def get_incident(incident_id):
     with open(file_path, "r") as file:
         incidents = json.load(file)
 
+    # Find requested incident
+    selected_incident = None
+
     for incident in incidents:
         if incident["id"] == incident_id:
+            selected_incident = incident
+            break
+
+    if selected_incident is None:
+        return jsonify({
+            "error": "Incident not found"
+        }), 404
+
+    # Score ALL incidents so ranking is correct
+    scored_incidents = prioritize_alerts(incidents)
+
+    # Find the requested incident after ranking
+    for incident in scored_incidents:
+        if incident["id"] == incident_id:
+
+            # Keep actual affected user count for frontend
+            incident["affected_users"] = selected_incident["affected_users"]
+
             return jsonify(incident)
 
-    return jsonify({"error": "Incident not found"}), 404
-
+    return jsonify({
+        "error": "Incident not found"
+    }), 404
 
 @incident_bp.route("/api/incidents", methods=["POST"])
 def create_incident():

@@ -3,7 +3,7 @@ import React from 'react';
 const factorDisplayNames = {
   severity: 'Severity',
   assetImportance: 'Asset Importance',
-  affectedUsers: 'Affected Users',
+  affectedUsers: 'Affected Users Score',
   dataSensitivity: 'Data Sensitivity',
   attackConfidence: 'Attack Confidence',
   businessImpact: 'Business Impact'
