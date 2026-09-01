@@ -6,8 +6,10 @@ import {
   LogOut, ShieldAlert, ChevronLeft, ChevronRight 
 } from 'lucide-react';
 import { getDashboard } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 const Sidebar = ({ isMobileOpen, setMobileOpen }) => {
+  const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const [stats, setStats] = useState({ active: 0, critical: 0 });
 
@@ -148,23 +150,29 @@ const Sidebar = ({ isMobileOpen, setMobileOpen }) => {
 
           <div className={`flex items-center justify-between ${collapsed ? 'flex-col gap-4' : 'gap-3 mt-2'}`}>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold shrink-0">HS</div>
+              {user?.picture ? (
+                <img src={user.picture} alt={user.name} className="w-10 h-10 rounded-full border border-primary/30 shrink-0 object-cover" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold shrink-0">
+                  {user?.name ? user.name.slice(0, 2).toUpperCase() : 'SO'}
+                </div>
+              )}
               {!collapsed && (
                 <div className="text-sm whitespace-nowrap overflow-hidden">
-                  <div className="font-medium text-white truncate w-24">H. Shanmugavel</div>
-                  <div className="text-[10px] text-gray-500 uppercase tracking-wider">L2 Analyst</div>
+                  <div className="font-medium text-white truncate w-24" title={user?.name}>{user?.name || 'Analyst'}</div>
+                  <div className="text-[10px] text-gray-500 uppercase tracking-wider">{user?.tier || 'Level 2 Analyst'}</div>
                 </div>
               )}
             </div>
             <button 
-              onClick={() => alert("Logged out!")}
+              onClick={logout}
               className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors group relative"
-              title="Log out"
+              title="Sign Out"
             >
               <LogOut size={18} />
               {collapsed && (
                 <div className="absolute left-full ml-4 px-2 py-1 bg-gray-800 text-white text-xs font-bold rounded opacity-0 group-hover:opacity-100 pointer-events-none z-50 whitespace-nowrap shadow-xl">
-                  Log out
+                  Sign Out
                 </div>
               )}
             </button>

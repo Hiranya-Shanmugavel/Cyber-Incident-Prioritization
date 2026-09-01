@@ -13,7 +13,11 @@ import Analysts from './pages/Analysts';
 import ActivityLogs from './pages/ActivityLogs';
 import NewIncidentModal from './components/NewIncidentModal';
 
+import { useAuth } from './context/AuthContext';
+import Login from './pages/Login';
+
 function App() {
+  const { user } = useAuth();
   const [showNew, setShowNew] = useState(false);
   const [isMobileOpen, setMobileOpen] = useState(false);
 
@@ -22,6 +26,10 @@ function App() {
     window.addEventListener('openNewIncident', handleOpen);
     return () => window.removeEventListener('openNewIncident', handleOpen);
   }, []);
+
+  if (!user) {
+    return <Login />;
+  }
 
   return (
     <div className="flex h-screen bg-background text-gray-100 overflow-hidden">
