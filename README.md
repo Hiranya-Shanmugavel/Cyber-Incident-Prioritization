@@ -424,6 +424,7 @@ This allows security analysts to understand not only **what the priority is**, b
 
 ---
 
+
 # 🚀 Why ThreatPulse?
 
 Traditional incident handling can require analysts to manually inspect and compare numerous alerts.
