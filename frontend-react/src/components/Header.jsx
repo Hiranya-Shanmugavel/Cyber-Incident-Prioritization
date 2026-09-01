@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Search, Bell } from 'lucide-react';
+import { Search, Bell, Menu } from 'lucide-react';
 
-const Header = () => {
+const Header = ({ setMobileOpen }) => {
   const searchRef = useRef(null);
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -17,10 +17,18 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="h-20 bg-card border-b border-gray-800 flex items-center justify-between px-6 shrink-0">
-      <div>
-        <h2 className="text-2xl font-display font-bold">Security Command Center</h2>
-        <p className="text-sm text-gray-400">Real-time threat monitoring & incident prioritization</p>
+    <header className="h-20 bg-card border-b border-gray-800 flex items-center justify-between px-6 shrink-0 z-20">
+      <div className="flex items-center gap-4">
+        <button 
+          className="md:hidden p-2 -ml-2 text-gray-400 hover:text-white"
+          onClick={() => setMobileOpen(true)}
+        >
+          <Menu size={24} />
+        </button>
+        <div className="hidden sm:block">
+          <h2 className="text-2xl font-display font-bold">Security Command Center</h2>
+          <p className="text-sm text-gray-400">Real-time threat monitoring & incident prioritization</p>
+        </div>
       </div>
       <div className="flex items-center gap-6">
         <div className="relative group">
