@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "type": "Phishing",
+        "source": "Email",
+        "description": "Suspicious phishing email detected",
+        "severity": "HIGH",
+        "status": "OPEN"
+    },
+    {
+        "id": 2,
+        "type": "Malware",
+        "source": "Endpoint",
+        "description": "Malware detected on employee workstation",
+        "severity": "CRITICAL",
+        "status": "OPEN"
+    },
+    {
+        "id": 3,
+        "type": "Unauthorized Access",
+        "source": "Login System",
+        "description": "Multiple failed login attempts detected",
+        "severity": "MEDIUM",
+        "status": "OPEN"
+    },
+    {
+        "id": 4,
+        "type": "Data Breach",
+        "source": "Database",
+        "description": "Unusual database access detected",
+        "severity": "CRITICAL",
+        "status": "OPEN"
+    },
+    {
+        "id": 5,
+        "type": "Ransomware",
+        "source": "Server",
+        "description": "Ransomware activity detected",
+        "severity": "CRITICAL",
+        "status": "OPEN"
+    }
+]
