@@ -1,21 +1,212 @@
-from flask import Flask
-from flask_cors import CORS
+# app.py
 
-from routes.incidents import incident_bp
+import sys
+import os
 
-app = Flask(__name__)
+# Ensure backend directory is in Python path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-CORS(app)
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+from datetime import datetime
+from typing import List, Optional
 
-app.register_blueprint(incident_bp)
+from models import IncidentCreate, IncidentResponse, PrioritizeRequest, DashboardStats
+from database import init_db, get_all_incidents, get_incident_by_id, insert_incident, update_incident_status, get_next_id, seed_database
+from scoring_engine import prioritize_alerts, score_single_incident
+from sample_data import SAMPLE_INCIDENTS
 
 
-@app.route("/")
-def home():
+# Initialize FastAPI
+app = FastAPI(
+    title="Cyber Incident Prioritization API",
+    description="Real-time threat monitoring and incident prioritization engine",
+    version="1.0.0"
+)
+
+# Enable CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Mount frontend static files
+frontend_dir = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    "..",
+    "frontend"
+)
+if os.path.isdir(frontend_dir):
+    app.mount("/frontend", StaticFiles(directory=frontend_dir), name="frontend")
+
+
+@app.on_event("startup")
+def startup():
+    """Initialize database and seed sample data on startup."""
+    init_db()
+
+    # Score sample incidents before seeding
+    scored_incidents = prioritize_alerts(SAMPLE_INCIDENTS)
+    seed_database(scored_incidents)
+
+
+# ========================
+# HEALTH CHECK
+# ========================
+
+@app.get("/api/health")
+def health_check():
+    return {"status": "healthy"}
+
+
+@app.get("/")
+def root():
     return {
-        "message": "Cyber Incident Prioritization API is running"
+        "message": "Cyber Incident Prioritization API is running",
+        "docs": "/docs",
+        "health": "/api/health"
     }
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# ========================
+# INCIDENTS
+# ========================
+
+@app.get("/api/incidents")
+def list_incidents(status: Optional[str] = None, priority_level: Optional[str] = None):
+    """Get all incidents, optionally filtered by status or priority level."""
+    incidents = get_all_incidents()
+
+    if status:
+        incidents = [i for i in incidents if i.get("status", "").lower() == status.lower()]
+
+    if priority_level:
+        incidents = [i for i in incidents if i.get("priority_level", "").upper() == priority_level.upper()]
+
+    # Re-rank the filtered list
+    for idx, incident in enumerate(incidents, start=1):
+        incident["rank"] = idx
+
+    return incidents
+
+
+@app.get("/api/incidents/{incident_id}")
+def get_incident(incident_id: str):
+    """Get a specific incident by ID."""
+    incident = get_incident_by_id(incident_id)
+    if not incident:
+        raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found")
+    return incident
+
+
+@app.post("/api/incidents", status_code=201)
+def create_incident(data: IncidentCreate):
+    """Create a new incident and score it."""
+    alert = data.model_dump()
+
+    # Generate ID if not provided
+    if not alert.get("id"):
+        alert["id"] = get_next_id()
+
+    # Add timestamp
+    alert["created_at"] = datetime.now().isoformat()
+
+    try:
+        scored = score_single_incident(alert)
+    except (ValueError, KeyError, TypeError) as e:
+        raise HTTPException(status_code=400, detail=f"Scoring error: {str(e)}")
+
+    insert_incident(scored)
+
+    return scored
+
+
+@app.patch("/api/incidents/{incident_id}/status")
+def update_status(incident_id: str, status: str):
+    """Update incident status (Investigate, Escalate, Resolve)."""
+    incident = get_incident_by_id(incident_id)
+    if not incident:
+        raise HTTPException(status_code=404, detail=f"Incident {incident_id} not found")
+
+    valid_statuses = ["Open", "Investigating", "Escalated", "Resolved", "Closed"]
+    if status not in valid_statuses:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid status. Must be one of: {', '.join(valid_statuses)}"
+        )
+
+    update_incident_status(incident_id, status)
+    return {"id": incident_id, "status": status, "message": f"Incident {incident_id} status updated to {status}"}
+
+
+# ========================
+# PRIORITIZE
+# ========================
+
+@app.post("/api/prioritize")
+def prioritize(request: PrioritizeRequest):
+    """Accept cybersecurity alerts and return scored, ranked results."""
+    alerts = [alert.model_dump() for alert in request.alerts]
+
+    if not alerts:
+        raise HTTPException(status_code=400, detail="No alerts provided")
+
+    try:
+        ranked = prioritize_alerts(alerts)
+    except (ValueError, KeyError, TypeError) as e:
+        raise HTTPException(status_code=400, detail=f"Scoring error: {str(e)}")
+
+    return ranked
+
+
+# ========================
+# DASHBOARD
+# ========================
+
+@app.get("/api/dashboard")
+def dashboard():
+    """Return dashboard statistics."""
+    incidents = get_all_incidents()
+
+    # Count by priority level
+    critical_count = sum(1 for i in incidents if i.get("priority_level") == "CRITICAL")
+    high_count = sum(1 for i in incidents if i.get("priority_level") == "HIGH")
+    medium_count = sum(1 for i in incidents if i.get("priority_level") == "MEDIUM")
+    low_count = sum(1 for i in incidents if i.get("priority_level") == "LOW")
+
+    # Active incidents (not resolved/closed)
+    active = [i for i in incidents if i.get("status") not in ("Resolved", "Closed")]
+
+    # Priority queue (top incidents sorted by score)
+    sorted_incidents = sorted(
+        incidents,
+        key=lambda x: x.get("priority_score", 0),
+        reverse=True
+    )
+    for idx, inc in enumerate(sorted_incidents, start=1):
+        inc["rank"] = idx
+
+    # Calculate detection rate (simulated based on confidence)
+    avg_confidence = 0
+    if incidents:
+        avg_confidence = sum(i.get("confidence", 0) for i in incidents) / len(incidents)
+
+    return {
+        "critical_threats": critical_count,
+        "active_incidents": len(active),
+        "threat_detection_rate": round(avg_confidence * 100, 1),
+        "average_response_time": "4.2m",
+        "priority_queue": sorted_incidents,
+        "threat_distribution": {
+            "critical": critical_count,
+            "high": high_count,
+            "medium": medium_count,
+            "low": low_count
+        },
+        "total_incidents": len(incidents)
+    }

@@ -5,7 +5,6 @@ from ranking import rank_alerts
 from explanation import generate_explanation
 
 
-# Scoring weights
 WEIGHTS = {
     "severity": 0.25,
     "asset_importance": 0.20,
@@ -19,8 +18,8 @@ WEIGHTS = {
 def calculate_priority_score(alert):
     """
     Calculate the priority score for one cybersecurity alert.
+    Expects normalized values (0-10 scale).
     """
-
     score = (
         alert["severity"] * WEIGHTS["severity"]
         + alert["asset_importance"] * WEIGHTS["asset_importance"]
@@ -29,8 +28,6 @@ def calculate_priority_score(alert):
         + alert["confidence"] * WEIGHTS["confidence"]
         + alert["business_impact"] * WEIGHTS["business_impact"]
     )
-
-    # Convert score from 0-10 scale to 0-100 scale
     return round(score * 10, 2)
 
 
@@ -38,7 +35,6 @@ def get_priority_level(score):
     """
     Convert numerical score into a priority level.
     """
-
     if score >= 80:
         return "CRITICAL"
     elif score >= 60:
@@ -49,41 +45,43 @@ def get_priority_level(score):
         return "LOW"
 
 
+def score_single_incident(alert):
+    """
+    Score a single incident and return it with
+    priority_score, priority_level, rank, and explanation.
+    """
+    normalized = normalize_alert(alert)
+    priority_score = calculate_priority_score(normalized)
+
+    result = alert.copy()
+    result["priority_score"] = priority_score
+    result["priority_level"] = get_priority_level(priority_score)
+    result["rank"] = 1
+    result["explanation"] = generate_explanation(normalized)
+
+    return result
+
+
 def prioritize_alerts(alerts):
     """
     Main function.
-
-    Input:
-        List of cybersecurity alerts
-
-    Output:
-        Ranked list of alerts
+    Input: List of cybersecurity alerts
+    Output: Ranked list of alerts with scores and explanations
     """
-
     processed_alerts = []
 
-    # Process every alert
     for alert in alerts:
-
-        # Step 1: Normalize the alert values
         normalized_alert = normalize_alert(alert)
-
-        # Step 2: Calculate priority score
         priority_score = calculate_priority_score(normalized_alert)
 
-        # Create a new alert result
         result = alert.copy()
-
         result["priority_score"] = priority_score
         result["priority_level"] = get_priority_level(priority_score)
+        # Generate explanation using NORMALIZED values
+        result["explanation"] = generate_explanation(normalized_alert)
 
         processed_alerts.append(result)
 
-    # Step 3: Rank all alerts
     ranked_alerts = rank_alerts(processed_alerts)
-
-    # Step 4: Generate explanations
-    for alert in ranked_alerts:
-        alert["reason"] = generate_explanation(alert)
 
     return ranked_alerts

@@ -5,35 +5,29 @@ def generate_explanation(alert):
     """
     Generate a simple explanation for why
     an alert received its priority score.
-    """
 
+    Expects NORMALIZED alert values (all on 0-10 scale).
+    """
     reasons = []
 
-    # Severity
-    if alert["severity"] >= 8:
+    if alert.get("severity", 0) >= 8:
         reasons.append("high severity")
 
-    # Asset importance
-    if alert["asset_importance"] >= 8:
+    if alert.get("asset_importance", 0) >= 8:
         reasons.append("critical asset importance")
 
-    # Data sensitivity
-    if alert["data_sensitivity"] >= 8:
+    if alert.get("data_sensitivity", 0) >= 8:
         reasons.append("highly sensitive data")
 
-    # Confidence
-    if alert["confidence"] >= 8:
+    if alert.get("confidence", 0) >= 8:
         reasons.append("high attack confidence")
 
-    # Business impact
-    if alert["business_impact"] >= 8:
+    if alert.get("business_impact", 0) >= 8:
         reasons.append("high business impact")
 
-    # Affected users
-    if alert["affected_users"] >= 7:
+    if alert.get("affected_users", 0) >= 6:
         reasons.append("large number of affected users")
 
-    # If no major factors are detected
     if not reasons:
         return (
             "This alert has moderate or low scores "
