@@ -39,10 +39,10 @@ app.add_middleware(
 frontend_dir = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "..",
-    "frontend"
+    "frontend-react/dist"
 )
 if os.path.isdir(frontend_dir):
-    app.mount("/frontend", StaticFiles(directory=frontend_dir), name="frontend")
+    app.mount("/frontend", StaticFiles(directory=frontend_dir), name="frontend-react/dist")
 
 
 @app.on_event("startup")
