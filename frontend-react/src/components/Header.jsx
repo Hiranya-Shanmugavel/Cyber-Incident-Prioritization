@@ -36,7 +36,7 @@ const Header = () => {
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-card"></span>
         </button>
       </div>
-    </header>
+    <button className="bg-primary hover:bg-primary/90 text-white font-bold py-2 px-4 rounded-lg text-sm ml-4 transition-colors shadow-lg shadow-primary/20" onClick={() => window.dispatchEvent(new Event("openNewIncident"))}>+ New Incident</button></header>
   );
 };
 export default Header;

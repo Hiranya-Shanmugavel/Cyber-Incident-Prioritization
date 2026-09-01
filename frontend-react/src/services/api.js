@@ -11,6 +11,7 @@ export const getIncidents = () => api.get('/api/incidents');
 export const getIncidentById = (id) => api.get('/api/incidents/' + id);
 export const executeSoarAction = (id, actionType) => 
   api.post('/api/incidents/' + id + '/soar-action', { action_type: actionType });
+export const createIncident = (data) => api.post('/api/incidents', data);
 export const updateIncidentStatus = (id, status) => 
   api.patch('/api/incidents/' + id + '/status?status=' + status);
 
