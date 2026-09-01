@@ -19,16 +19,18 @@ def normalize_affected_users(users):
 def normalize_confidence(confidence):
     """
     Convert confidence into a 0-10 scale.
+    Supports 0-1 (probability), 0-10 (scale), and 0-100 (percentage).
     """
     confidence = float(confidence)
     if 0 <= confidence <= 1:
         return round(confidence * 10, 2)
-    if 1 < confidence <= 10:
+    elif 1 < confidence <= 10:
         return round(confidence, 2)
-    raise ValueError(
-        "Confidence must be between 0 and 1 "
-        "or between 0 and 10."
-    )
+    elif 10 < confidence <= 100:
+        return round(confidence / 10, 2)
+    else:
+        # Default to capping at 10 if strangely high
+        return 10.0
 
 
 def normalize_alert(alert):

@@ -49,10 +49,6 @@ const IncidentModal = ({ incident, onClose }) => {
           {/* Body */}
           <div className="flex-1 overflow-y-auto p-6 space-y-6">
             
-            <div className="bg-background p-4 rounded-lg border border-gray-800 text-sm text-gray-300">
-              {incident.description}
-            </div>
-
             {/* Intel Grid */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
               <div className="bg-background p-4 rounded-lg border border-gray-800">
@@ -79,44 +75,55 @@ const IncidentModal = ({ incident, onClose }) => {
               </div>
             </div>
 
-            {/* Metrics */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <Metric label="Severity" val={incident.severity} max={10} />
-              <Metric label="Asset Importance" val={incident.asset_importance} max={10} />
-              <Metric label="Affected Users" val={incident.affected_users} max={1000} />
-              <Metric label="Data Sensitivity" val={incident.data_sensitivity} max={10} />
+            {/* AI Explanation & Comparative Ranking */}
+            <div className="bg-gray-800/30 rounded-xl p-6 border border-gray-700">
+              <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">AI Rank Explanation</h4>
+              <p className="text-sm text-gray-300 mb-4 font-medium leading-relaxed">{incident.explanation}</p>
+              
+              {incident.rank_explanation && (
+                <div className="p-4 bg-primary/10 border border-primary/30 rounded-lg shadow-inner mb-6">
+                  <h5 className="text-[10px] font-bold text-primary uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                    Comparative Ranking vs Lower Ranked Incident
+                  </h5>
+                  <p className="text-sm text-gray-200">{incident.rank_explanation}</p>
+                </div>
+              )}
+              
+              <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3">Score Breakdown (Weighted)</h4>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {incident.score_breakdown ? Object.entries(incident.score_breakdown).map(([k, v]) => (
+                  <div key={k} className="bg-background p-3 rounded-lg border border-gray-800 flex justify-between items-center">
+                    <div className="text-[10px] text-gray-500 uppercase tracking-wider">{k.replace('_', ' ')}</div>
+                    <div className="font-mono text-white font-bold">{v}</div>
+                  </div>
+                )) : <span className="text-sm text-gray-500">Score breakdown unavailable.</span>}
+              </div>
             </div>
 
-            {/* AI Blocks */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-               <div className="space-y-3">
-                 <h4 className="font-bold text-white flex items-center gap-2"><FileWarning size={16} className="text-red-400"/> AI Explanation</h4>
-                 <div className="bg-red-500/5 p-4 rounded-lg text-sm text-red-200/80 leading-relaxed border border-red-500/20 h-full">
-                   {incident.explanation || 'No explanation generated.'}
-                 </div>
-               </div>
-               <div className="space-y-3">
-                 <h4 className="font-bold text-white flex items-center gap-2"><Shield size={16} className="text-purple-400"/> Remediation Playbook</h4>
-                 <div className="bg-purple-500/5 p-4 rounded-lg text-sm text-purple-200/80 border border-purple-500/20 h-full">
-                   {incident.remediation_playbook ? (
-                     <ul className="space-y-2">
-                       {incident.remediation_playbook.split('\n').map((step, i) => (
-                         <li key={i} className="flex gap-2 items-start">
-                           <span className="text-purple-400 font-bold mt-0.5">›</span>
-                           <span>{step}</span>
-                         </li>
-                       ))}
-                     </ul>
-                   ) : 'No playbook attached.'}
-                 </div>
-               </div>
+            {/* Remediation Playbook */}
+            <div className="space-y-3">
+              <h4 className="font-bold text-white flex items-center gap-2"><Shield size={16} className="text-purple-400"/> AI Remediation Playbook</h4>
+              <div className="bg-purple-500/5 p-4 rounded-lg text-sm text-purple-200/80 border border-purple-500/20">
+                {incident.remediation_playbook ? (
+                  <ul className="space-y-2">
+                    {incident.remediation_playbook.split('\n').map((step, i) => (
+                      <li key={i} className="flex gap-2 items-start">
+                        <span className="text-purple-400 font-bold mt-0.5">›</span>
+                        <span>{step}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : 'No playbook attached.'}
+              </div>
             </div>
+
           </div>
           
           {/* Footer Actions */}
           <div className="p-6 border-t border-gray-800 bg-cardSecondary rounded-b-xl flex flex-wrap justify-between items-center gap-4 shrink-0">
             <div className="flex gap-3 items-center">
-              <span className="text-xs text-gray-500 uppercase tracking-widest mr-2">SOAR</span>
+              <span className="text-xs text-gray-500 uppercase tracking-widest mr-2">SOAR Actions</span>
               <button onClick={() => handleSoar('Block IP')} className="px-4 py-2 bg-background hover:bg-red-500/10 text-red-500 rounded-lg font-medium transition-colors border border-red-500/30 hover:border-red-500 text-sm flex items-center gap-2"><Shield size={16}/> Block IP</button>
               <button onClick={() => handleSoar('Isolate Host')} className="px-4 py-2 bg-background hover:bg-orange-500/10 text-orange-500 rounded-lg font-medium transition-colors border border-orange-500/30 hover:border-orange-500 text-sm flex items-center gap-2"><Activity size={16}/> Isolate Host</button>
             </div>
@@ -130,12 +137,5 @@ const IncidentModal = ({ incident, onClose }) => {
     </AnimatePresence>
   );
 };
-
-const Metric = ({ label, val, max }) => (
-  <div className="bg-background border border-gray-800 p-3 rounded-lg flex justify-between items-center">
-    <span className="text-xs text-gray-500">{label}</span>
-    <span className="font-mono text-white text-sm">{val}<span className="text-gray-600">/{max}</span></span>
-  </div>
-);
 
 export default IncidentModal;
