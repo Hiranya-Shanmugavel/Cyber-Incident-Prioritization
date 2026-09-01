@@ -219,6 +219,22 @@
             var incClass = getIncidentClass(level);
             var badgeClass = getBadgeClass(level);
 
+            // SLA Calculation
+            var slaHtml = "";
+            if (incident.sla_deadline) {
+                var deadline = new Date(incident.sla_deadline);
+                var now = new Date();
+                var diffMs = deadline - now;
+                var diffMins = Math.floor(diffMs / 60000);
+                if (diffMs < 0) {
+                    slaHtml = '<span class="sla-badge sla-critical"><i class="fa-solid fa-triangle-exclamation"></i> BREACHED</span>';
+                } else if (diffMins < 5) {
+                    slaHtml = '<span class="sla-badge sla-warning"><i class="fa-solid fa-clock"></i> WARNING (' + diffMins + 'm)</span>';
+                } else {
+                    slaHtml = '<span class="sla-badge sla-safe"><i class="fa-solid fa-check"></i> ' + diffMins + 'm left</span>';
+                }
+            }
+
             var div = document.createElement("div");
             div.className = "incident " + incClass;
             div.setAttribute("data-name", (incident.type || "").toLowerCase());
@@ -237,6 +253,7 @@
                     '<div class="incident-meta">' +
                         '<span><i class="fa-solid fa-globe"></i> ' + (incident.source || "unknown") + '</span>' +
                         '<span><i class="fa-regular fa-clock"></i> ' + formatTimeAgo(incident.created_at) + '</span>' +
+                        (slaHtml ? slaHtml : '') +
                         '<span><i class="fa-solid fa-user"></i> ' + (incident.affected_users || 0) + ' targets</span>' +
                     '</div>' +
                 '</div>' +
@@ -388,6 +405,46 @@
         document.getElementById("modalImpact").textContent = inc.business_impact + "/10";
         document.getElementById("modalExplanation").textContent = inc.explanation || inc.reason || "No explanation available.";
         document.getElementById("modalDescription").textContent = inc.description || "No description.";
+
+        document.getElementById("modalSourceIp").textContent = inc.source_ip || "--";
+        document.getElementById("modalGeo").textContent = inc.geo_location || "--";
+
+        var mitreContainer = document.getElementById("modalMitreTags");
+        if (mitreContainer) {
+            mitreContainer.innerHTML = "";
+            if (inc.mitre_tactics) {
+                var tags = inc.mitre_tactics.split(",");
+                tags.forEach(function(tag) {
+                    var t = tag.trim();
+                    if (t) {
+                        var span = document.createElement("span");
+                        span.className = "mitre-tag";
+                        span.textContent = t;
+                        mitreContainer.appendChild(span);
+                    }
+                });
+            } else {
+                mitreContainer.textContent = "--";
+            }
+        }
+
+        var playbookContainer = document.getElementById("modalPlaybookList");
+        if (playbookContainer) {
+            playbookContainer.innerHTML = "";
+            if (inc.remediation_playbook) {
+                var steps = inc.remediation_playbook.split("\n");
+                steps.forEach(function(step) {
+                    var s = step.trim();
+                    if (s) {
+                        var li = document.createElement("li");
+                        li.textContent = s;
+                        playbookContainer.appendChild(li);
+                    }
+                });
+            } else {
+                playbookContainer.innerHTML = "<li>No automated playbook available.</li>";
+            }
+        }
 
         var badge = document.getElementById("modalBadge");
         badge.textContent = inc.priority_level || "--";
@@ -723,5 +780,18 @@
         console.log("ThreatPulse Security Dashboard initialized.");
         loadDashboard();
     });
+
+    window.executeSoar = function(actionType) {
+        var id = document.getElementById("modalId").textContent;
+        apiRequest("/api/incidents/" + id + "/soar-action", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({action_type: actionType})
+        }).then(function () {
+            showToast("SOAR Action Executed", actionType + " applied to " + id, "success");
+        }).catch(function () {
+            showToast("SOAR Action Failed", actionType + " offline mode", "info");
+        });
+    };
 
 })();

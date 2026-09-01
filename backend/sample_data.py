@@ -17,6 +17,10 @@ SAMPLE_INCIDENTS = [
         "status": "Open",
         "source": "login-secure-auth.com",
         "description": "Suspicious login page targeting enterprise credentials",
+        "mitre_tactics": "T1566, T1048",
+        "source_ip": "185.15.22.10",
+        "geo_location": "RU (Russia)",
+        "remediation_playbook": "1. Isolate the affected host.\n2. Block IP 185.15.22.10 on firewall.\n3. Force password reset for compromised accounts.",
         "created_at": "2026-09-01T10:00:00"
     },
     {
@@ -31,6 +35,10 @@ SAMPLE_INCIDENTS = [
         "status": "Open",
         "source": "email-gateway",
         "description": "Malicious executable detected in incoming email",
+        "mitre_tactics": "T1566.001, T1204.002",
+        "source_ip": "104.28.19.123",
+        "geo_location": "US (United States)",
+        "remediation_playbook": "1. Delete email from inboxes.\n2. Add hash to endpoint protection blocklist.\n3. Scan host for malicious processes.",
         "created_at": "2026-09-01T10:05:00"
     },
     {

@@ -406,8 +406,30 @@
                 <label>Description</label>
                 <p id="modalDescription">--</p>
             </div>
+            <div class="modal-threat-intel">
+                <div class="intel-box">
+                    <label>Source IP</label>
+                    <span id="modalSourceIp">--</span>
+                </div>
+                <div class="intel-box">
+                    <label>Geo-Location</label>
+                    <span id="modalGeo">--</span>
+                </div>
+                <div class="intel-box">
+                    <label>MITRE ATT&CK</label>
+                    <div id="modalMitreTags" class="mitre-tags"></div>
+                </div>
+            </div>
+            <div class="modal-playbook">
+                <label><i class="fa-solid fa-wand-magic-sparkles"></i> AI Remediation Playbook</label>
+                <ul id="modalPlaybookList"></ul>
+            </div>
         </div>
         <div class="modal-footer">
+            <div class="soar-actions">
+                <button class="soar-btn block-ip" onclick="executeSoar('Block IP')">Block IP</button>
+                <button class="soar-btn isolate" onclick="executeSoar('Isolate Host')">Isolate Host</button>
+            </div>
             <button class="modal-action-btn investigate" data-action="Investigating">
                 <i class="fa-solid fa-magnifying-glass"></i> Investigate
             </button>

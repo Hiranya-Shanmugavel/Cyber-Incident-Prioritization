@@ -18,6 +18,11 @@ class IncidentCreate(BaseModel):
     status: str = Field(default="Open", description="Incident status")
     source: Optional[str] = None
     description: Optional[str] = None
+    mitre_tactics: Optional[str] = None
+    source_ip: Optional[str] = None
+    geo_location: Optional[str] = None
+    remediation_playbook: Optional[str] = None
+    sla_deadline: Optional[str] = None
 
 
 class IncidentResponse(BaseModel):
@@ -38,6 +43,11 @@ class IncidentResponse(BaseModel):
     explanation: Optional[str] = None
     source: Optional[str] = None
     description: Optional[str] = None
+    mitre_tactics: Optional[str] = None
+    source_ip: Optional[str] = None
+    geo_location: Optional[str] = None
+    remediation_playbook: Optional[str] = None
+    sla_deadline: Optional[str] = None
 
 
 class PrioritizeRequest(BaseModel):

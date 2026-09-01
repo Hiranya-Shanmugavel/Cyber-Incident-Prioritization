@@ -37,6 +37,11 @@ def init_db():
             status TEXT NOT NULL DEFAULT 'Open',
             source TEXT,
             description TEXT,
+            mitre_tactics TEXT,
+            source_ip TEXT,
+            geo_location TEXT,
+            remediation_playbook TEXT,
+            sla_deadline TEXT,
             priority_score REAL,
             priority_level TEXT,
             rank INTEGER,
@@ -88,9 +93,10 @@ def insert_incident(incident):
         INSERT OR REPLACE INTO incidents
         (id, type, severity, asset_importance, affected_users,
          data_sensitivity, confidence, business_impact, status,
-         source, description, priority_score, priority_level,
+         source, description, mitre_tactics, source_ip, geo_location,
+         remediation_playbook, sla_deadline, priority_score, priority_level,
          rank, explanation, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         incident["id"],
         incident["type"],
@@ -103,6 +109,11 @@ def insert_incident(incident):
         incident.get("status", "Open"),
         incident.get("source"),
         incident.get("description"),
+        incident.get("mitre_tactics"),
+        incident.get("source_ip"),
+        incident.get("geo_location"),
+        incident.get("remediation_playbook"),
+        incident.get("sla_deadline"),
         incident.get("priority_score"),
         incident.get("priority_level"),
         incident.get("rank"),

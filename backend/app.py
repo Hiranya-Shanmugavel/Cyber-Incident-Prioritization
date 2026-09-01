@@ -121,6 +121,16 @@ def create_incident(data: IncidentCreate):
     except (ValueError, KeyError, TypeError) as e:
         raise HTTPException(status_code=400, detail=f"Scoring error: {str(e)}")
 
+    if not scored.get("sla_deadline"):
+        from datetime import timedelta
+        level = scored.get("priority_level", "LOW")
+        now = datetime.now()
+        if level == "CRITICAL": delta = timedelta(minutes=15)
+        elif level == "HIGH": delta = timedelta(hours=1)
+        elif level == "MEDIUM": delta = timedelta(hours=4)
+        else: delta = timedelta(hours=24)
+        scored["sla_deadline"] = (now + delta).isoformat()
+
     insert_incident(scored)
 
     return scored
@@ -142,6 +152,17 @@ def update_status(incident_id: str, status: str):
 
     update_incident_status(incident_id, status)
     return {"id": incident_id, "status": status, "message": f"Incident {incident_id} status updated to {status}"}
+
+
+@app.post("/api/incidents/{incident_id}/soar-action")
+def execute_soar_action(incident_id: str, action: dict):
+    """Execute SOAR action for an incident."""
+    incident = get_incident_by_id(incident_id)
+    if not incident:
+        raise HTTPException(status_code=404, detail="Incident not found")
+    # Simulate action success
+    action_type = action.get("action_type", "Unknown")
+    return {"status": "success", "message": f"Action '{action_type}' successfully executed on {incident_id}"}
 
 
 # ========================
