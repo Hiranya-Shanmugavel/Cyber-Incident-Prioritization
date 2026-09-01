@@ -22,8 +22,8 @@ from sample_data import SAMPLE_INCIDENTS
 # Initialize FastAPI
 app = FastAPI(
     title="Cyber Incident Prioritization API",
-    description="Real-time threat monitoring and incident prioritization engine",
-    version="1.0.0"
+    description="API for evaluating and scoring cybersecurity threats",
+    version="2.0.0"
 )
 
 # Enable CORS
@@ -230,3 +230,11 @@ def dashboard():
         },
         "total_incidents": len(incidents)
     }
+
+@app.exception_handler(404)
+async def custom_404_handler(request, exc):
+    if request.url.path.startswith('/api') or request.url.path.startswith('/docs'):
+        from fastapi.responses import JSONResponse
+        return JSONResponse({'detail': 'Not Found'}, status_code=404)
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url='/frontend/index.html#' + request.url.path)
