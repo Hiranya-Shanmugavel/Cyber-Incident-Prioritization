@@ -64,13 +64,12 @@ def health_check():
     return {"status": "healthy"}
 
 
+from fastapi.responses import RedirectResponse
+
 @app.get("/")
-def root():
-    return {
-        "message": "Cyber Incident Prioritization API is running",
-        "docs": "/docs",
-        "health": "/api/health"
-    }
+def read_root():
+    """Redirect to the React frontend."""
+    return RedirectResponse(url="/frontend/index.html")
 
 
 # ========================
