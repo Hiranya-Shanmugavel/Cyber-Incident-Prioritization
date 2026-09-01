@@ -1,5 +1,12 @@
 # 🛡️ ThreatPulse — Cyber Incident Prioritization Platform
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://cyber-incident-prioritization.vercel.app)
+[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/Frontend-React_19_+_Vite-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
+[![Tailwind CSS](https://img.shields.io/badge/Styling-Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com)
+
+> 🌐 **Live Website Deployment:** [https://cyber-incident-prioritization.vercel.app](https://cyber-incident-prioritization.vercel.app)
+
 > **An intelligent security operations platform that analyzes, scores, and prioritizes cyber incidents to help security teams respond to the most critical threats first.**
 
 ## 🚨 Problem Statement
