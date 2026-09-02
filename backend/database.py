@@ -5,10 +5,13 @@ import os
 import json
 from datetime import datetime
 
-DB_PATH = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "cyber_incidents.db"
-)
+if os.environ.get("VERCEL"):
+    DB_PATH = "/tmp/cyber_incidents.db"
+else:
+    DB_PATH = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)),
+        "cyber_incidents.db"
+    )
 
 
 def get_connection():
